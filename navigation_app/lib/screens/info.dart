@@ -14,6 +14,9 @@ info({required this.index});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Info',style: TextStyle(fontWeight: FontWeight.bold,),)
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(50),

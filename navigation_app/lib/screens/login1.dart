@@ -8,12 +8,13 @@ class homepage extends StatelessWidget{
   Widget build (BuildContext context){
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueAccent.shade200,
         title: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Online Hospital',style: TextStyle(fontWeight: FontWeight.w500 ,fontSize: 20),),
+              Text('Workouts',style: TextStyle(fontWeight: FontWeight.w500 ,fontSize: 20),),
               Icon(Icons.search),
             ],
           ),
@@ -24,8 +25,8 @@ class homepage extends StatelessWidget{
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('Asset/image/img.png'),
-            fit: BoxFit.cover
+            image: AssetImage('Asset/image/img_8.png'),
+            fit: BoxFit.fill
           )
         ),
         child: Padding(
@@ -35,7 +36,7 @@ class homepage extends StatelessWidget{
             children: [
               SizedBox(height: 50),
               Text('All About',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 55,color: Colors.white),),
-              Text('Patient Health',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 55,color: Colors.white)),
+              Text('WORKOUTS',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 55,color: Colors.white)),
               Text('In One App',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 55,color: Colors.white)),
               SizedBox(height: 50),
               Text('Lets Get Started',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 35,color: Colors.lightBlueAccent.shade400)),
@@ -45,6 +46,7 @@ class homepage extends StatelessWidget{
                 width: 300,
                 child: TextField(
                   controller: log,
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Name',
                     hintStyle: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
@@ -76,6 +78,7 @@ class homepage extends StatelessWidget{
                 width: 300,
                 child: TextField(
                   controller: pas,
+                  style: TextStyle(color: Colors.white),
                   obscureText: isObscure ,
                   obscuringCharacter: '*',
                   decoration: InputDecoration(

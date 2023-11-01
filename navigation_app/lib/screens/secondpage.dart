@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_app/screens/3rdpage.dart';
 import 'info.dart';
 class second extends StatelessWidget {
 
   List<Map<String, dynamic>> datalist=[
-    {'title': 'ABS WORKOUT','img': 'Asset/image/img_1.png','sub': '20 MINS.6 EXCERCISES'},
-    {'title': 'CHEST WORKOUT','img': 'Asset/image/img.png','sub': '20 MINS.6 EXCERCISES'},
-    {'title': 'ARM WORKOUT','img': 'Asset/image/img_1.png','sub': '20 MINS.6 EXCERCISES'},
-    {'title': 'LEGS WORKOUT','img': 'Asset/image/img.png','sub': '20 MINS.6 EXCERCISES'},
-    {'title': 'BACK WORKOUT','img': 'Asset/image/img_1.png','sub': '20 MINS.6 EXCERCISES'},
+    {'img': 'Asset/image/img_2.png'},
+    {'img': 'Asset/image/img_3.png'},
+    {'img': 'Asset/image/img_4.png'},
+    {'img': 'Asset/image/img_5.png'},
+    {'img': 'Asset/image/img_6.png'},
   ];
 
 
@@ -35,7 +36,7 @@ class second extends StatelessWidget {
               child: InkWell(
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return info(index: index,);
+                    return page(index: index,);
                   }));
                 },
                 child: Stack(
@@ -48,7 +49,7 @@ class second extends StatelessWidget {
                           color: Color(0xfDEEADCFF),
                           image: DecorationImage(
                               image: AssetImage(datalist[index]['img']),
-                              fit: BoxFit.cover
+                              fit: BoxFit.fill
                           )
                       ),
                       child: Padding(
@@ -56,7 +57,7 @@ class second extends StatelessWidget {
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
                                     onPressed: (){
@@ -64,24 +65,13 @@ class second extends StatelessWidget {
                                         return info(index: index,);
                                       }));
                                     },
-                                    icon: Icon(Icons.info))
+                                    icon: Icon(Icons.info,color: Colors.white,))
                               ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 100),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Text(datalist[index]['title'],style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 50),),
-                          ),
-                          Text(datalist[index]['sub'],style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green),),
-                        ],
-                      ),
-                    )
 
                   ],
 
