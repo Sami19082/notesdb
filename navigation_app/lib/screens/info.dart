@@ -18,12 +18,14 @@ info({required this.index});
         title: Text('Info',style: TextStyle(fontWeight: FontWeight.bold,),)
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(50),
+        child: Container(
+
+          decoration: BoxDecoration(
+            color: Color(0xfDEEADCFF)
+          ),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Color(0xfDEEADCFF)
+              borderRadius: BorderRadius.circular(22),
             ),
             child: Center(
               child: Column(

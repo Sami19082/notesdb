@@ -36,7 +36,7 @@ class second extends StatelessWidget {
               child: InkWell(
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return page(index: index,);
+                    return page(mIndex: index,);
                   }));
                 },
                 child: Stack(
