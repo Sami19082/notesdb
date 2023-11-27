@@ -50,6 +50,7 @@ class _pageState extends State<page> {
     {'text': 'Side Arms Raise','time':'x8'},
   ];
   List< List<Map<String,dynamic>>> alllist = [];
+
   @override
   void initState() {
     super.initState();

@@ -68,31 +68,30 @@ class _lastpageState extends State<lastpage> {
 
  ];
 
- List< List<Map<String,dynamic>>> tolist = [];
 
  List<Map<String,dynamic>> details3=[
    {
-     'title':'JUMPING JACKS 20s',
+     'title':'Arms Raises',
      'subs':'Start with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Abdominal Crunches',
+     'title':'Side Arm Raise',
      'subs':'with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Russian Twist',
+     'title':'Triceps Dips',
      'subs':'your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Mountain Climber',
+     'title':'ARms Circle',
      'subs':'r and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Leg Raises',
+     'title':'Diamond Pushup',
      'subs':' then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
@@ -101,27 +100,27 @@ class _lastpageState extends State<lastpage> {
 
  List<Map<String,dynamic>> details4=[
    {
-     'title':'JUMPING JACKS 20s',
+     'title':'Side Hop',
      'subs':'Start with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Abdominal Crunches',
+     'title':'Squats',
      'subs':'with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Russian Twist',
+     'title':'Backward Lunge',
      'subs':'your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Mountain Climber',
+     'title':'Donkey kick',
      'subs':'r and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Leg Raises',
+     'title':'Knee to chest',
      'subs':' then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
@@ -130,32 +129,34 @@ class _lastpageState extends State<lastpage> {
 
  List<Map<String,dynamic>> details5=[
    {
-     'title':'JUMPING JACKS 20s',
+     'title':'Arms Raises',
      'subs':'Start with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Abdominal Crunches',
+     'title':'Knee Push Up',
      'subs':'with your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Russian Twist',
+     'title':'Cat Cow pose',
      'subs':'your Feet togather and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Mountain Climber',
+     'title':'Childs Poser',
      'subs':'r and your arms by your sides, then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
    {
-     'title':'Leg Raises',
+     'title':'Side Arms Raise',
      'subs':' then jump up with your feet apart and your hands overhead',
      'sub': 'Return to start position then do the next rap. this exercise provides a full body workout and works all your large muscle groups'
    },
 
  ];
+
+  List< List<Map<String,dynamic>>> tolist = [];
 
   @override
   void initState() {
@@ -169,32 +170,20 @@ class _lastpageState extends State<lastpage> {
 
   Widget build(BuildContext context) {
 
+    var achdata='';
+    if(widget.nindex==0){
+      achdata = tolist[widget.nindex][index] as String;
+    }
+
 
     return Scaffold(
       appBar: AppBar(
        title: Text('WORKOUTS'),
       ),
       body: Container(
-        child:ListView.builder(
-          itemCount:  tolist[widget.nindex].length,
-            itemBuilder: (context, index){
-        var achdata=tolist[widget.nindex][index];
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.black),
-                ),
-                child: Column(
-                  children: [
-                    Text(achdata['title'],style: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.bold),),
-                    Text(achdata['sub'],style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.w400),),
-                    Text(achdata['subs'],style: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.bold),),
+child: Text(''),
+              ),);
 
-                  ],
-                ),
-              );
-            })
-      ),
-    );
+
   }
 }

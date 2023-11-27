@@ -1,9 +1,4 @@
-import 'package:first_app/whatsapp.dart';
-import 'package:flutter/material.dart';
 
-void main(){
-runApp(MaterialApp(home: mychat()));
-}
 class mychat extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
