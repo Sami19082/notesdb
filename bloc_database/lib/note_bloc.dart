@@ -32,7 +32,7 @@ class NoteBloc extends Bloc<NoteEvent,NoteState>{
 
     on<UpdateNote>((event, emit) async {
       emit(NoteLoading());
-     var check = await db.Upda te(event.updatenote);
+     var check = await db.Update(event.updatenote);
      if(check){
        var listnotes = await db.fetchNotes();
        emit(NoteLoaded(allnotes: listnotes));

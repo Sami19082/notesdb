@@ -17,7 +17,7 @@ class NoteModel{
   Map<String,dynamic>toMap(){
     return {
       AppDataBase.COLUMN_TITLE : noteTitle,
-      AppDataBase.COLUMN_DESC : noteTitle,
+      AppDataBase.COLUMN_DESC : noteDesc,
     };
   }
 }

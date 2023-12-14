@@ -43,6 +43,9 @@ class OperationPage extends StatelessWidget {
             ElevatedButton(onPressed: (){
               if(titlecontroller.text.isNotEmpty&&desccontroller.text.isNotEmpty){
                 if(isUpdate){
+              title =titlecontroller.text ;
+              descs = desccontroller.text ;
+
                   //update
                   var updatednote = NoteModel(
                       noteID: note_id,

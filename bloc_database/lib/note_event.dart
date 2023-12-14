@@ -13,7 +13,7 @@ class UpdateNote extends NoteEvent{
   NoteModel updatenote;
   int mindex;
 
-  UpdateNote({required this.mindex,required this.updatenote, required this.NoteModel });
+  UpdateNote({required this.mindex,required this.updatenote,});
 }
 
 //delete
