@@ -8,10 +8,11 @@ import 'notemodel.dart';
 class OperationPage extends StatelessWidget {
   bool isUpdate ;
   int note_id;
+  int user_id;
   String title;
   String descs;
 
-  OperationPage({this.isUpdate = false, this.note_id = 0 ,this.title = "", this.descs = ""});
+  OperationPage({this.isUpdate = false, this.note_id = 0 ,required this.user_id,this.title = "", this.descs = ""});
 
   var titlecontroller = TextEditingController();
   var desccontroller = TextEditingController();
@@ -50,7 +51,7 @@ class OperationPage extends StatelessWidget {
                   var updatednote = NoteModel(
                       noteID: note_id,
                       noteTitle: title,
-                      noteDesc: descs);
+                      noteDesc: descs, user_ID: user_id);
 
                   BlocProvider.of<NoteBloc>(context).add(UpdateNote( mindex: note_id, updatenote: updatednote));
 
@@ -59,7 +60,7 @@ class OperationPage extends StatelessWidget {
                   var addnote = NoteModel(
                       noteID: 0,
                       noteTitle: titlecontroller.text.toString(),
-                      noteDesc: desccontroller.text.toString());
+                      noteDesc: desccontroller.text.toString(), user_ID: 0);
                   BlocProvider.of<NoteBloc>(context).add(AddNoteEvent(newNote: addnote));
                 }
                 Navigator.pop(context);

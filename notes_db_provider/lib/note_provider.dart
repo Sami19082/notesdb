@@ -4,20 +4,33 @@ import 'package:notes_db_provider/appdata.dart';
 import 'notemodel.dart';
 
 class NoteProvider extends ChangeNotifier{
-  List<NoteModel> _arrNotes = [];
-  AppDataBase db =  AppDataBase.instance;
+  AppDataBase db ;
 
-  fetchNotes()async{
+  NoteProvider({required this.db});
+
+  List<NoteModel> _arrNotes = [];
+
+ void fetchNotes()async{
     _arrNotes = await db.fetchAllNotes();
     notifyListeners();
   }
 
-  addNotes(NoteModel newNote)async{
-    var check = await db.addNote(newNote);
-    if(check){
-      fetchNotes();
-      notifyListeners();
-    }
+ void addNotes(NoteModel newNote)async{
+    await db.addNote(newNote);
+    _arrNotes = await db.fetchAllNotes();
+    notifyListeners();
+  }
+
+  void updateNotes(NoteModel updated)async{
+    db.updateNote(updated);
+    _arrNotes = await db.fetchAllNotes();
+    notifyListeners();
+  }
+
+ void deleteNote(int noteID )async{
+    db.deleteNote(noteID);
+    _arrNotes = await db.fetchAllNotes();
+    notifyListeners();
   }
 
   List<NoteModel> getNotes(){

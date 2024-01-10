@@ -1,23 +1,33 @@
+
+import 'package:cubitwithdatabase/cubit.dart';
 import 'package:cubitwithdatabase/notemodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'cubit.dart';
 
 class Addnotepage extends StatelessWidget {
-  var titlecontroller= TextEditingController();
+  bool isupdate;
+  String mtitle;
+  String mdesc;
+  int mnoteID;
+  int userID;
+  Addnotepage({ this. mtitle = "",this.mdesc = "", this.mnoteID = 0,this.isupdate = false,this.userID= 0});
 
+
+  var titlecontroller= TextEditingController();
   var desccontroller= TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    titlecontroller.text =  mtitle ;
+    desccontroller.text = mdesc;
     return Scaffold(
       appBar: AppBar(
         title: Text("Operation Page"),
       ),
       body: Column(
         children: [
-          Text("Add Notes"),
+          Text(isupdate ? "Update page":"Add Notes"),
           TextField(controller: titlecontroller,),
           TextField(controller: desccontroller,),
           Row(
@@ -25,14 +35,24 @@ class Addnotepage extends StatelessWidget {
             children: [
               TextButton(onPressed: (){
                 if(titlecontroller.text.isNotEmpty&&desccontroller.text.isNotEmpty){
-                  context.read<NoteCubit>().addnote(NoteModel(
-                    note_id: 0,
-                      user_id: 0,
-                      mtitle: titlecontroller.text.toString(),
-                      mdesc: desccontroller.text.toString()));
-                  Navigator.pop(context);
+                  if(isupdate){
+                    var notetitle = titlecontroller.text.toString();
+                    context.read<NoteCubit>().updateNote(
+                        NoteModel(
+                            mtitle: notetitle,
+                            mdesc: desccontroller.text.toString(),
+                            note_id: mnoteID,
+                            userID: userID));
+                  }else{
+                    context.read<NoteCubit>().addNote(
+                        NoteModel(note_id: 0,
+                            mtitle: titlecontroller.text.toString(),
+                            mdesc: desccontroller.text.toString(),
+                            userID: 0));
+                  }
                 }
-              }, child: Text("Add")),
+                Navigator.pop(context);
+              }, child: Text(isupdate ? "update" : "Add")),
               TextButton(onPressed: (){Navigator.pop(context);}, child: Text("cancel"))
             ],
           )

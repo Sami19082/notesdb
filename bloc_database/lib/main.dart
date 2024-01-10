@@ -2,9 +2,13 @@ import 'package:bloc_database/note_bloc.dart';
 import 'package:bloc_database/note_database.dart';
 import 'package:bloc_database/note_event.dart';
 import 'package:bloc_database/note_state.dart';
+import 'package:bloc_database/onboarding/login.dart';
+import 'package:bloc_database/onboarding/signup.dart';
+import 'package:bloc_database/onboarding/splash.dart';
 import 'package:bloc_database/operation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 void main() {
@@ -26,12 +30,30 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Homepage(),
+      home: SplashPage(),
     );
   }
 }
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+String name = "";
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void getUserName()async{
+    var prefs =await SharedPreferences.getInstance();
+   var useer = prefs.getString(AppDataBase.USER_NAME);
+   name = useer!;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -39,7 +61,16 @@ class Homepage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bloc With DataBase"),
+        title: Text("Bloc With DataBase\nHello $name"),
+        actions: [
+          IconButton(onPressed: ()async{
+            var prefs = await SharedPreferences.getInstance();
+            prefs.setBool(AppDataBase.LOGIN_PREFS_KEY, false);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+              return Login();
+            }));
+          }, icon: Icon(Icons.logout))
+        ],
       ),
       body: BlocBuilder<NoteBloc, NoteState>(
         builder: (context, state) {
@@ -71,7 +102,7 @@ class Homepage extends StatelessWidget {
                                   isUpdate: true,
                                   note_id: currData.noteID,
                                   title: "${currData.noteTitle}",
-                                  descs: "${currData.noteDesc}",
+                                  descs: "${currData.noteDesc}", user_id: currData.user_ID,
                                 );
                               }));
                         }, icon: Icon(Icons.edit)),
@@ -90,7 +121,7 @@ class Homepage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return OperationPage();
+            return OperationPage(user_id: 0);
           }));
         },
         child: Icon(Icons.navigate_next),

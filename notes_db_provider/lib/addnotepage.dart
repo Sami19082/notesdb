@@ -1,31 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'note_provider.dart';
 import 'notemodel.dart';
 
 class AddNotePage extends StatelessWidget {
-  String? title;
-  String? desc;
-  int? note_ID;
+  String title;
+  String desc;
+  int uid;
+  int note_ID;
   bool isUpdate = false;
- AddNotePage({ this.title, this.desc,required this.isUpdate,this.note_ID});
+ AddNotePage({ this.title = "", this.desc = "", this.isUpdate = false,this.note_ID = 0,required this.uid});
 
  var titleController = TextEditingController();
  var descController = TextEditingController();
  String operationTitle = "Add Note";
 
- void addNote(String title, String desc, BuildContext ctx)async{
-   ctx.read<NoteProvider>().addNotes(NoteModel(title : title,desc: desc, note_id: 0));
-
- }
-void updateNote(){
-
-}
-
 initControllers(){
-   titleController.text = title!;
-   descController.text = desc!;
+   titleController.text = title;
+   descController.text = desc;
 }
   @override
   Widget build(BuildContext context) {
@@ -71,11 +63,11 @@ initControllers(){
                 var desc = descController.text.toString();
 
                 if(isUpdate){
-                  updateNote();
+                  context.read<NoteProvider>().updateNotes(NoteModel(title: title, desc: desc, note_id: note_ID, user_id:uid ));
                   Navigator.pop(context);
                 }else{
                   if(titleController.text.isNotEmpty && descController.text.isNotEmpty){
-                    addNote(title, desc, context);
+                    context.read<NoteProvider>().addNotes(NoteModel(title: titleController.text.toString(), desc: descController.text.toString(), note_id: 0, user_id: 0));
                     Navigator.pop(context);
                   }
                 }

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notes_db_provider/appdata.dart';
+import 'package:notes_db_provider/user_onboard/login.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'addnotepage.dart';
 import 'note_provider.dart';
 import 'notemodel.dart';
 
 class HomePage extends StatefulWidget {
-  String title;
-  HomePage({required this.title});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -26,20 +25,25 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getInitialNotes();
-    appDB = AppDataBase.instance;
+    context.read<NoteProvider>().fetchNotes();
+
+
   }
-
-  void getInitialNotes()async{
-    await context.read<NoteProvider>().fetchNotes();
-  }
-
-
   @override
   Widget build(BuildContext context) {
+    context.read<NoteProvider>().getNotes();
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes With DB & Provider"),
+        actions: [
+          IconButton(onPressed: ()async{
+            var prefs = await SharedPreferences.getInstance();
+            prefs.setBool(AppDataBase.LOGIN_PREFS_KEY, false);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+              return Login();
+            }));
+          }, icon: Icon(Icons.logout)),
+        ],
       ),
 
       body: Padding(
@@ -53,6 +57,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Consumer<NoteProvider>(
               builder: (context,provider,child){
+
                 return ListView.builder(
                   itemCount: provider.getNotes().length,
                     itemBuilder: (context,index){
@@ -70,9 +75,10 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.push(context, MaterialPageRoute(builder: (context){
                                     return AddNotePage(
                                       isUpdate: true,
-                                      note_ID: 0,
+                                      note_ID: currData.note_id,
                                       title: currData.title,
                                       desc: currData.desc,
+                                      uid: currData.user_id,
                                     );
                                   },),);
                                 },
@@ -80,8 +86,7 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(width: 15,),
                               InkWell(
                                 onTap: (){
-                                  AppDataBase.instance.deleteNote(index);
-
+                                  context.read<NoteProvider>().deleteNote(currData.note_id);
                                 },
                                   child: Icon(Icons.delete)),
                             ],
@@ -97,7 +102,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return AddNotePage(isUpdate: false,);
+            return AddNotePage(isUpdate: false, uid: 0,);
           },),);
         },child: Icon(Icons.add),
       ),
