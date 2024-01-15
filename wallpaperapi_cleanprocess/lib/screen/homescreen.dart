@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaperapi_cleanprocess/bloc/wallpaper_bloc.dart';
@@ -11,6 +10,7 @@ import 'package:wallpaperapi_cleanprocess/screen/searchscreen.dart';
 import 'package:wallpaperapi_cleanprocess/screen/wallpaper_view.dart';
 import 'package:wallpaperapi_cleanprocess/search_bloc/search_bloc.dart';
 import '../constrain/variables.dart';
+import '../models/categorymodel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,14 +21,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   WallpaperDataModel? wallpaperDataModel;
-  WallpaperDataModel? categoryDataModel;
   var search = TextEditingController();
-
+  List<CategoryModel> listCat=[
+    CategoryModel(title: "Winter", imgPath: "https://cdn.mos.cms.futurecdn.net/8Zw7hWD5ZaquyftsRbEmof-1200-80.jpg"),
+    CategoryModel(title: "Car", imgPath: "https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Lamborghini-Revuelto-190920231426.jpg&w=872&h=578&q=75&c=1"),
+    CategoryModel(title: "Space", imgPath: "https://img.freepik.com/free-photo/glowing-spaceship-orbits-planet-starry-galaxy-generated-by-ai_188544-9655.jpg"),
+    CategoryModel(title: "Cartoon", imgPath: "https://staticg.sportskeeda.com/editor/2023/08/3626c-16921875120044-1920.jpg?w=840"),
+    CategoryModel(title: "Sea", imgPath: "https://images.nationalgeographic.org/image/upload/v1652341068/EducationHub/photos/ocean-waves.jpg"),
+    CategoryModel(title: "Burj Khalifa", imgPath: "https://www.usatoday.com/gcdn/-mm-/0f42e32787c67e840e95e667e4b8fc2d8fc90f80/c=395-0-971-768/local/-/media/2021/03/09/USATODAY/usatsports/imageForEntry25-aa1.jpg"),
+    CategoryModel(title: "Nature", imgPath: "https://images.unsplash.com/photo-1618588507085-c79565432917?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwbmF0dXJlfGVufDB8fDB8fHww"),
+  ];
   @override
   void initState() {
-   BlocProvider.of<WallpaperBloc>(context).add(GetTrendingWall());
-    getPhotosCategory("popular search");
-   super.initState();
+    BlocProvider.of<WallpaperBloc>(context).add(GetTrendingWall());
+    getPhotosCategory("popular-search");
+    super.initState();
   }
 
   getPhotosCategory(String category) async {
@@ -37,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     var response = await http.get(uri, headers: {"Authorization": apiKey});
     if (response.statusCode == 200) {
       var rawdata = jsonDecode(response.body);
-      categoryDataModel = WallpaperDataModel.fromJson(rawdata);
+      wallpaperDataModel = WallpaperDataModel.fromJson(rawdata);
       setState(() {});
     }
   }
@@ -53,19 +60,12 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             homeScreenSearchTextField(context),
-            theColorTone(context),
             bestOfMonthTitle(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: bestOfMonthView(),
-            ),
+            bestOfMonthView(),
+            thecolorTitle(),
+            theColorTone(context),
             categoryTitle(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: categoryView(),
-            ),
-            bestOFMonthGridView()
-
+            categoryView()
           ],
         ),
       ),
@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Padding categoryTitle() {
     return const Padding(
       padding: EdgeInsets.all(12),
@@ -110,12 +111,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  SingleChildScrollView categoryView(){
+  Widget categoryView() {
     return SingleChildScrollView(
       child: SizedBox(
-        height: 400,
+        height: 300,
         child: GridView.builder(
-          itemCount:categoryDataModel!.photos!.length,
+            itemCount: listCat.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 2,
@@ -126,33 +127,35 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   onTap: () {
                     selectedIndex = index;
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return CategoryScreen(
-                        isCategory: true,
-                      );
-                    }));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                          return CategoryScreen(
+                            Category: listCat[index].title,
+                          );
+                        }));
                   },
                   child: Container(
                     height: 120,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: NetworkImage(
-                                "${categoryDataModel!.photos![index].src!.landscape}"),
+                                "${listCat[index].imgPath}"),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.green),
                     child: Center(
                       child: Text(
-                        listCategory[index],
+                        listCat[index].title,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               );
             }),
-      ),
+      )
     );
   }
 
@@ -163,15 +166,14 @@ class _HomePageState extends State<HomePage> {
         return Center(
           child: CircularProgressIndicator(),
         );
-      }
-      else if (state is WallpaperLoadedState) {
-       var wallpaperDataModel = state.mData;
+      } else if (state is WallpaperLoadedState) {
+        var wallpaperDataModel = state.mData;
         return SizedBox(
           height: 250,
           child: GridView.builder(
-            scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-              itemCount: wallpaperDataModel.photos!.length,
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: wallpaperDataModel.photos.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
@@ -185,23 +187,26 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(builder: (context) {
                         return WallpaperView(
-                            image: wallpaperDataModel
-                                .photos![index].src!.portrait
-                                .toString());
+                          imageUrl: wallpaperDataModel
+                              .photos[index].src!.portrait
+                              .toString(),
+                        );
                       }),
                     );
                   },
                   child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                      child: Image.network('${wallpaperDataModel.photos![index].src!.portrait}',fit: BoxFit.cover,)),
+                      scrollDirection: Axis.vertical,
+                      child: Image.network(
+                        '${wallpaperDataModel.photos[index].src!.portrait}',
+                        fit: BoxFit.cover,
+                      )),
                 );
               }),
         );
       }
 
-        return Container();
-      }
-    );
+      return Container();
+    });
   }
 
   Padding thecolorTitle() {
@@ -220,60 +225,6 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(
             fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
       ),
-    );
-  }
-
-  SingleChildScrollView BestofTheMonth(){
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemCount: wallpaperDataModel!.photos!.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.9 / 1.19,
-                crossAxisCount: 1),
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                    color: Colors.green.shade200,
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            '${wallpaperDataModel!.photos![index].src!.portrait}'),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(12)),
-              );
-            }),
-      ),
-    );
-  }
-
-  GridView bestOFMonthGridView() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      itemCount: wallpaperDataModel!.photos!.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.9 / 1.19,
-          crossAxisCount: 1),
-      itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-              color: Colors.green.shade200,
-              image: DecorationImage(
-                  image: NetworkImage(
-                      '${wallpaperDataModel!.photos![index].src!.portrait}'),
-                  fit: BoxFit.cover),
-              borderRadius: BorderRadius.circular(12)),
-        );
-      },
     );
   }
 
@@ -303,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                             child: SearchScreen(
                               upComingsearch: search.text.toString().isNotEmpty
                                   ? search.text.toString()
-                                  : "nature",
+                                  : "",
                               colorcode: listColorModel[index].name,
                             ),
                           );

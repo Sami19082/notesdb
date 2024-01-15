@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as httpClient;
@@ -7,25 +6,38 @@ import '../constrain/variables.dart';
 import '../models/api_model.dart';
 
 class CategoryScreen extends StatefulWidget {
-  CategoryScreen({super.key, this.isCategory = true});
-  bool isCategory;
+  CategoryScreen({super.key, required this.Category });
+
+  String Category;
+
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
   WallpaperDataModel? wallpaperDataModel;
+  ScrollController? scrollController;
+
   @override
   void initState() {
     super.initState();
 
-    if (widget.isCategory) {
-      getPhotosByCategory(listCategory[selectedIndex]);
-    } else {
-      getPhotosByCategory(
-        listColorModel[selectedIndex].name.toString(),
-      );
-    }
+    scrollController = ScrollController()
+      ..addListener(() {
+        if (scrollController!.position.pixels ==
+            scrollController!.position.maxScrollExtent) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("End of Grid!!")));
+        }
+      });
+    getPhotosByCategory(widget.Category);
+    // if (widget.Category) {
+    //   getPhotosByCategory(listCategory[selectedIndex]);
+    // } else {
+    //   getPhotosByCategory(
+    //     listColorModel[selectedIndex].name.toString(),
+    //   );
+    // }
   }
 
 // ,mcolor: listColorModel[selectedIndex].name.toString()
@@ -33,7 +45,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     var apiKey = " WuSQl2o2WCR4yEHwD4fijNKVEptdFzfuFSAqPcRlie2uNuvZQnhBDMRC";
     var uri = Uri.parse('https://api.pexels.com/v1/search?query=$category');
     var response =
-    await httpClient.get(uri, headers: {"Authorization": apiKey});
+        await httpClient.get(uri, headers: {"Authorization": apiKey});
     if (response.statusCode == 200) {
       var rowData = jsonDecode(response.body);
       wallpaperDataModel = WallpaperDataModel.fromJson(rowData);
@@ -46,25 +58,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.isCategory
-              ? listCategory[selectedIndex]
-              : listColorModel[selectedIndex].name.toString(),
+          widget.Category,
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
-      body: wallpaperDataModel != null && wallpaperDataModel!.photos!.isNotEmpty
+      body: wallpaperDataModel != null && wallpaperDataModel!.photos.isNotEmpty
           ? SingleChildScrollView(
-        child: Column(
-          children: [categoryImageWallpaper()],
-        ),
-      )
+              controller: scrollController,
+              child: Column(
+                children: [categoryImageWallpaper()],
+              ),
+            )
           : const Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 
   GridView categoryImageWallpaper() {
     return GridView.builder(
-      itemCount: wallpaperDataModel!.photos!.length,
+      itemCount: wallpaperDataModel!.photos.length,
       shrinkWrap: true,
       padding: const EdgeInsets.all(12),
       physics: const NeverScrollableScrollPhysics(),
@@ -82,8 +93,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return WallpaperView(
-                      image: wallpaperDataModel!
-                          .photos![selectedIndex].src!.portrait
+                      imageUrl: wallpaperDataModel!
+                          .photos[selectedIndex].src!.portrait
                           .toString());
                 },
               ));
@@ -93,7 +104,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
                       image: NetworkImage(wallpaperDataModel!
-                          .photos![index].src!.portrait
+                          .photos[index].src!.landscape
                           .toString()),
                       fit: BoxFit.cover)),
             ),

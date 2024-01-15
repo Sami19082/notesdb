@@ -14,7 +14,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoadingState());
 
       try{
-        var rawData = await apiHelper.getAPI("${Urls.SEARCH_WALLPAPER}?query=${event.query}");
+        var rawData = await apiHelper.getAPI("${Urls.SEARCH_WALLPAPER}?query=${event.query}&color=${event.colorCode}&page=${event.page}");
         var wallpaperModel = WallpaperDataModel.fromJson(rawData);
         emit(SearchLoadedState(mData: wallpaperModel));
       }catch(e){

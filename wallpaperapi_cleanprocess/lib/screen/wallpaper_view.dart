@@ -1,9 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:wallpaper/wallpaper.dart';
 
 class WallpaperView extends StatelessWidget {
-  WallpaperView({super.key, required this.image});
-  String image;
+  WallpaperView({super.key,  this.imageUrl});
+
+  String? imageUrl;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +17,7 @@ class WallpaperView extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: Image.network(
-              image,
+              imageUrl!,
               fit: BoxFit.cover,
             ),
           ),
@@ -24,13 +28,19 @@ class WallpaperView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  stackedButton(btName: 'Info', onTap: () {}, icon: Icons.info),
+                  stackedButton(btName: 'Info', onTap: () {
+
+                  }, icon: Icons.info),
                   stackedButton(
                       btName: 'Save',
-                      onTap: () {},
+                      onTap: () {
+                        saveWall(context);
+                      },
                       icon: Icons.save_alt_rounded),
                   stackedButton(
-                      btName: 'Apply', onTap: () {}, icon: Icons.edit),
+                      btName: 'Apply', onTap: () {
+                    applyWall(context);
+                  }, icon: Icons.edit),
                 ],
               ),
             ),
@@ -40,10 +50,31 @@ class WallpaperView extends StatelessWidget {
     );
   }
 
+  void applyWall(BuildContext context) {
+    var stream = Wallpaper.imageDownloadProgress(imageUrl!);
+    stream.listen((event) {
+      print(event);
+    }, onDone: () async{
+     var check = await Wallpaper.homeScreen(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          options: RequestSizeOptions.RESIZE_FIT);
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(check)));
+     print(check);
+    }, onError: (e) {
+      print("Error : $e");
+    });
+  }
+
+  void saveWall(BuildContext context) {
+    GallerySaver.saveImage(imageUrl!).then((value) => print("Wallpaper saved : $value"));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wallpaper Saved")));
+  }
+
   Column stackedButton(
       {required String btName,
-        required VoidCallback onTap,
-        required IconData icon}) {
+      required VoidCallback onTap,
+      required IconData icon}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -65,7 +96,7 @@ class WallpaperView extends StatelessWidget {
         Text(
           btName,
           style:
-          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10)
       ],

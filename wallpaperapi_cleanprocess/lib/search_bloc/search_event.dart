@@ -4,6 +4,7 @@ part of 'search_bloc.dart';
 abstract class SearchEvent {}
 class SearchWall extends SearchEvent{
   String query;
-
-  SearchWall({required this.query, required String colorcode});
+  String colorCode;
+  int? page;
+  SearchWall({required this.query, required this.colorCode,this.page = 1});
 }

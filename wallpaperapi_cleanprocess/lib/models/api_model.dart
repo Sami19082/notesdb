@@ -74,7 +74,7 @@ class PhotoModel {
 class WallpaperDataModel {
   num? page;
   num? per_page;
-  List<PhotoModel>? photos;
+  List<PhotoModel> photos;
   num? total_results;
   String? next_page;
   WallpaperDataModel({
